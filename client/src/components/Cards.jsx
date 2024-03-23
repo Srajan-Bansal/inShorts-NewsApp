@@ -1,29 +1,32 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { getNews } from "../service/api";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Cards() {
     const [news, setNews] = useState([]);
 
     const dailyNews = async () => {
-        try {
-            const res = await getNews();
-            setNews(res.data.data);
-        } catch (err) {
-            console.log('Error while displaying cards ', err.message);
-        }
-    }
+        const response = await getNews();
+        setNews((news) => [...news, ...response.data]);
+    };
 
     useEffect(() => {
         dailyNews();
     }, []);
 
     return (
-        <div>
+        <InfiniteScroll
+            dataLength={news.length}
+            next={dailyNews}
+            hasMore={true}
+            endMessage={<p>No more news to load.</p>}
+        >
+
             {news.map((data) => (
                 <Card key={data._id} data={data} />
             ))}
-        </div>
+        </InfiniteScroll>
     );
 }
 
