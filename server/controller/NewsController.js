@@ -1,12 +1,9 @@
 const NewsSchema = require('./../models/NewsSchema');
 
 exports.getNews = async (req, res, next) => {
-    try {   
+    try {
         const data = await NewsSchema.find({});
-        res.status(200).json({
-            state: 'success',
-            data
-        })
+        res.status(200).json(data);
     } catch (err) {
         console.log('Error in /news route ', err.message);
     }
